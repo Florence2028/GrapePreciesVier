@@ -30,23 +30,24 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch: serve from cache, fall back to network
+// Fetch: NETWORK FIRST — altijd de nieuwste versie ophalen
+// Als er geen internet is, gebruik dan de cache als backup
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((cached) => {
-            return cached || fetch(event.request).then((response) => {
-                // Cache new requests for next time
+        fetch(event.request)
+            .then((response) => {
+                // Sla de nieuwe versie op in de cache
                 const clone = response.clone();
                 caches.open(CACHE_NAME).then((cache) => {
                     cache.put(event.request, clone);
                 });
                 return response;
-            });
-        }).catch(() => {
-            // Offline fallback
-            if (event.request.destination === 'document') {
-                return caches.match('./index.html');
-            }
-        })
+            })
+            .catch(() => {
+                // Geen internet? Gebruik de gecachte versie
+                return caches.match(event.request).then((cached) => {
+                    return cached || caches.match('./index.html');
+                });
+            })
     );
 });
