@@ -775,12 +775,13 @@
             <span class="pw-grapes-deco" style="bottom:-8px;right:12px;">🍇</span>
             <span class="lock-icon">🍇</span>
             <h2> 4 Jet </h2>
+            <p class="pw-subtitle">Wachtwoord:</p>
             <p class="pw-hint" id="pw-hint-text"></p>
             <div class="password-input-wrap">
                 <input type="text" id="pw-input" placeholder="Wachtwoord..." autocomplete="off" autofocus>
             </div>
             <div class="pw-error-msg" id="pw-error"></div>
-            <button class="pw-submit" onclick="checkPassword()">Open mijn verrassing</button>
+            <button class="pw-submit" onclick="checkPassword()">🍇 Open mijn verrassing</button>
         </div>
     </div>
 
@@ -830,7 +831,6 @@
             <span class="header-icon">🍇💜</span>
             <h1>Precies Vier</h1>
             <div class="subtitle" id="date-display">Valentijnsdag Editie</div>
-            <div class="subtitle-theme">Speciaal voor jou gemaakt 🍇</div>
         </header>
 
         <div id="game-container">
@@ -985,6 +985,7 @@
         let lives = 6; // 6 pogingen!
         let isProcessing = false;
         let solvedGroups = [];
+        let previousGuesses = []; // Onthoudt eerdere foute combinaties
 
         function initGame() {
             if (gameInitialized) return;
@@ -1081,12 +1082,24 @@
             isProcessing = true;
 
             const selectedObjects = tiles.filter(t => selectedTiles.includes(t.id));
+
+            // Check of deze combinatie al eerder is geprobeerd
+            const guessKey = selectedObjects.map(t => t.word).sort().join(',');
+            if (previousGuesses.includes(guessKey)) {
+                showToast("Deze combinatie heb je al geprobeerd! 🍇");
+                isProcessing = false;
+                return;
+            }
+
             const firstGroup = selectedObjects[0].group;
             const allMatch = selectedObjects.every(t => t.group === firstGroup);
 
             if (allMatch) {
                 handleSuccess(firstGroup, selectedObjects);
             } else {
+                // Sla deze foute poging op
+                previousGuesses.push(guessKey);
+
                 // Check "one away"
                 const counts = {};
                 selectedObjects.forEach(obj => {
