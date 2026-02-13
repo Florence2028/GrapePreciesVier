@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precies Vier - Valentijnsdag Editie 💜🍇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdf2f8;
+            --bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 30%, #f3e8ff 70%, #ede9fe 100%);
+            --tile-bg: rgba(255, 255, 255, 0.7);
+            --tile-border: rgba(190, 140, 180, 0.3);
+            --tile-selected: linear-gradient(135deg, #7c3aed, #a855f7);
+            --tile-text: #4a1942;
+            --tile-text-selected: #ffffff;
+            --color-group-1: #fde68a;
+            --color-group-2: #fca5a5;
+            --color-group-3: #c4b5fd;
+            --color-group-4: #86efac;
+            --heart-color: #e11d48;
+            --grape-color: #7c3aed;
+            --font-main: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ============ FLOATING DECORATIONS ============ */
+        .floating-decoration {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+            font-size: 30px;
+            animation: floatAround 20s ease-in-out infinite;
+        }
+
+        .floating-decoration:nth-child(odd) {
+            animation-direction: reverse;
+        }
+
+        @keyframes floatAround {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            50% {
+                transform: translateY(10px) rotate(-3deg);
+            }
+
+            75% {
+                transform: translateY(-15px) rotate(4deg);
+            }
+        }
+
+        /* ============ GRAPE VINE DECORATION ============ */
+        .grape-vine {
+            position: fixed;
+            top: 0;
+            right: -10px;
+            width: 120px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.18;
+        }
+
+        .grape-vine svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .grape-vine-left {
+            position: fixed;
+            bottom: 0;
+            left: -10px;
+            width: 100px;
+            height: 250px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+            transform: scaleX(-1) rotate(180deg);
+        }
+
+        .grape-vine-left svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ============ HEADER ============ */
+        header {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid rgba(190, 140, 180, 0.25);
+        }
+
+        .header-icon {
+            font-size: 36px;
+            margin-bottom: 4px;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #4a1942;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #be185d, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #9d6b94;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        .subtitle-theme {
+            font-size: 12px;
+            color: #a855f7;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        /* ============ GAME BOARD ============ */
+        #game-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .tile {
+            background: var(--tile-bg);
+            border: 1.5px solid var(--tile-border);
+            border-radius: 12px;
+            aspect-ratio: 3/2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(10px, 3vw, 14px);
+            cursor: pointer;
+            text-transform: uppercase;
+            padding: 5px;
+            user-select: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--tile-text);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tile::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), transparent);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.12);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .tile:active {
+            transform: scale(0.97);
+        }
+
+        .tile.selected {
+            background: var(--tile-selected);
+            color: var(--tile-text-selected);
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .tile.selected::before {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+        }
+
+        /* ============ SOLVED CATEGORIES ============ */
+        .solved-category {
+            width: 100%;
+            padding: 16px 14px;
+            border-radius: 12px;
+            text-align: center;
+            animation: solvedPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solved-category::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+            pointer-events: none;
+        }
+
+        .solved-category[data-group="1"] {
+            background: linear-gradient(135deg, #fde68a, #fbbf24);
+        }
+
+        .solved-category[data-group="2"] {
+            background: linear-gradient(135deg, #fca5a5, #f87171);
+        }
+
+        .solved-category[data-group="3"] {
+            background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+        }
+
+        .solved-category[data-group="4"] {
+            background: linear-gradient(135deg, #86efac, #4ade80);
+        }
+
+        @keyframes solvedPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+            color: rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-words {
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.65);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============ CONTROLS ============ */
+        .controls {
+            margin-top: 28px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        button.action-btn {
+            padding: 12px 22px;
+            border-radius: 50px;
+            border: 1.5px solid rgba(124, 58, 237, 0.3);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: var(--font-main);
+            color: var(--tile-text);
+            transition: all 0.2s;
+        }
+
+        button.action-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(124, 58, 237, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+        }
+
+        button#submit-btn {
+            background: linear-gradient(135deg, #be185d, #7c3aed);
+            color: white;
+            border: none;
+            opacity: 0.3;
+            pointer-events: none;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+        }
+
+        button#submit-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        button#submit-btn.active:hover {
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ============ LIVES ============ */
+        .lives-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #7c3aed;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .life-grape {
+            font-size: 18px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .life-grape.lost {
+            opacity: 0.2;
+            transform: scale(0.7);
+        }
+
+        /* ============ TOAST ============ */
+        #toast-notification {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #4a1942, #7c3aed);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease, top 0.3s ease;
+            z-index: 100;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        #toast-notification.show {
+            opacity: 1;
+            top: 20px;
+        }
+
+        /* ============ WIN MODAL ============ */
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(190, 24, 93, 0.92), rgba(124, 58, 237, 0.92));
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 36px 30px;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 380px;
+            position: relative;
+            animation: modalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .mascot {
+            font-size: 60px;
+            margin-bottom: 10px;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .modal-content h2 {
+            color: #4a1942;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .modal-content p {
+            color: #9d6b94;
+            font-size: 15px;
+            margin-top: 6px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            font-size: 22px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #9d6b94;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(124, 58, 237, 0.1);
+            color: #7c3aed;
+        }
+
+        /* ============ GAME OVER MODAL ============ */
+        #gameover-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(74, 25, 66, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .gameover-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 36px 30px;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 380px;
+            text-align: center;
+            animation: modalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .gameover-content h2 {
+            color: #4a1942;
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .gameover-content p {
+            color: #9d6b94;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        button.retry-btn {
+            margin-top: 20px;
+            padding: 12px 32px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #be185d, #7c3aed);
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        button.retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-6px);
+            }
+
+            50% {
+                transform: translateX(6px);
+            }
+
+            75% {
+                transform: translateX(-6px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1001;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ============ PASSWORD SCREEN ============ */
+        #password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .password-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px 36px;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(124, 58, 237, 0.15);
+            max-width: 90%;
+            width: 360px;
+            text-align: center;
+            position: relative;
+            animation: modalIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .password-card .lock-icon {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 12px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .password-card h2 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #be185d, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .password-card .pw-subtitle {
+            font-size: 14px;
+            color: #9d6b94;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .password-card .pw-hint {
+            font-size: 12px;
+            color: #a855f7;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .password-input-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .password-input-wrap input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(124, 58, 237, 0.25);
+            font-size: 16px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--tile-text);
+            transition: all 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .password-input-wrap input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+        }
+
+        .password-input-wrap input.pw-error {
+            border-color: #e11d48;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .pw-error-msg {
+            font-size: 13px;
+            color: #e11d48;
+            font-weight: 600;
+            height: 20px;
+            margin-bottom: 8px;
+        }
+
+        button.pw-submit {
+            padding: 14px 40px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #be185d, #7c3aed);
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+            width: 100%;
+        }
+
+        button.pw-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(124, 58, 237, 0.4);
+        }
+
+        .pw-grapes-deco {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Hide game content initially */
+        #game-wrapper {
+            display: none;
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #game-wrapper.visible {
+            display: flex;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 400px) {
+            .controls {
+                flex-wrap: wrap;
+            }
+
+            button.action-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .password-card {
+                padding: 30px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ PASSWORD SCREEN ============ -->
+    <div id="password-screen">
+        <!-- Floating decorations on password screen -->
+        <div class="floating-decoration" style="top:10%;left:8%;animation-delay:0s;">🍇</div>
+        <div class="floating-decoration" style="top:20%;right:10%;animation-delay:2s;">💜</div>
+        <div class="floating-decoration" style="bottom:15%;left:5%;animation-delay:3s;">🍇</div>
+        <div class="floating-decoration" style="bottom:25%;right:8%;animation-delay:1s;">💕</div>
+
+        <div class="password-card">
+            <span class="pw-grapes-deco" style="top:-10px;left:10px;">🍇</span>
+            <span class="pw-grapes-deco" style="bottom:-8px;right:12px;">🍇</span>
+            <span class="lock-icon">🍇🔒</span>
+            <h2>Dit is alleen voor jou</h2>
+            <p class="pw-subtitle">Voer het wachtwoord in om je verrassing te openen 💜</p>
+            <p class="pw-hint" id="pw-hint-text"></p>
+            <div class="password-input-wrap">
+                <input type="text" id="pw-input" placeholder="Wachtwoord..." autocomplete="off" autofocus>
+            </div>
+            <div class="pw-error-msg" id="pw-error"></div>
+            <button class="pw-submit" onclick="checkPassword()">🍇 Open mijn verrassing</button>
+        </div>
+    </div>
+
+    <!-- ============ GAME CONTENT (hidden until password correct) ============ -->
+    <div id="game-wrapper">
+
+        <!-- Floating grape & heart decorations -->
+        <div class="floating-decoration" style="top:8%;left:5%;animation-delay:0s;">🍇</div>
+        <div class="floating-decoration" style="top:15%;right:8%;animation-delay:2s;">💜</div>
+        <div class="floating-decoration" style="top:55%;left:3%;animation-delay:4s;">🍇</div>
+        <div class="floating-decoration" style="top:70%;right:5%;animation-delay:1s;">💕</div>
+        <div class="floating-decoration" style="top:85%;left:10%;animation-delay:3s;">🍇</div>
+        <div class="floating-decoration" style="bottom:5%;right:12%;animation-delay:5s;">💜</div>
+        <div class="floating-decoration" style="top:35%;right:2%;animation-delay:6s;font-size:22px;">🌿</div>
+        <div class="floating-decoration" style="top:45%;left:1%;animation-delay:7s;font-size:22px;">🌿</div>
+
+        <!-- Grape vine SVG decoration top-right -->
+        <div class="grape-vine">
+            <svg viewBox="0 0 120 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M60 0 C60 50, 80 80, 60 120 C40 160, 90 180, 60 220 C30 260, 70 280, 60 300" stroke="#7c3aed"
+                    stroke-width="3" fill="none" opacity="0.5" />
+                <circle cx="50" cy="100" r="12" fill="#7c3aed" opacity="0.4" />
+                <circle cx="70" cy="110" r="12" fill="#7c3aed" opacity="0.35" />
+                <circle cx="55" cy="125" r="12" fill="#7c3aed" opacity="0.3" />
+                <circle cx="65" cy="90" r="10" fill="#7c3aed" opacity="0.25" />
+                <circle cx="75" cy="130" r="10" fill="#7c3aed" opacity="0.2" />
+                <circle cx="45" cy="85" r="8" fill="#7c3aed" opacity="0.2" />
+                <path d="M40 60 C20 40, 50 20, 60 50" fill="#4ade80" opacity="0.25" />
+                <path d="M80 70 C100 50, 70 30, 60 55" fill="#4ade80" opacity="0.2" />
+            </svg>
+        </div>
+
+        <!-- Grape vine SVG decoration bottom-left -->
+        <div class="grape-vine-left">
+            <svg viewBox="0 0 100 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 0 C50 40, 70 70, 50 100 C30 130, 70 150, 50 200 C40 230, 55 245, 50 250" stroke="#7c3aed"
+                    stroke-width="2.5" fill="none" opacity="0.4" />
+                <circle cx="45" cy="90" r="10" fill="#7c3aed" opacity="0.3" />
+                <circle cx="60" cy="100" r="10" fill="#7c3aed" opacity="0.25" />
+                <circle cx="50" cy="112" r="10" fill="#7c3aed" opacity="0.2" />
+                <circle cx="55" cy="80" r="8" fill="#7c3aed" opacity="0.2" />
+                <path d="M35 55 C15 35, 45 20, 50 45" fill="#4ade80" opacity="0.2" />
+            </svg>
+        </div>
+
+        <header>
+            <span class="header-icon">🍇💜</span>
+            <h1>Precies Vier</h1>
+            <div class="subtitle" id="date-display">Valentijnsdag Editie</div>
+            <div class="subtitle-theme">Speciaal voor jou gemaakt 🍇</div>
+        </header>
+
+        <div id="game-container">
+            <div id="toast-notification">Er klopt er eentje niet...</div>
+            <div id="solved-container"></div>
+            <div class="grid" id="tile-grid"></div>
+        </div>
+
+        <div class="lives-container" id="lives-display">
+            <!-- Wordt gevuld door JS -->
+        </div>
+
+        <div class="controls">
+            <button class="action-btn" onclick="shuffleTiles()">🔀 Hussel</button>
+            <button class="action-btn" id="submit-btn" onclick="submitGuess()">💜 Bevestig</button>
+            <button class="action-btn" onclick="deselectAll()">✖ Deselecteer</button>
+        </div>
+
+    </div><!-- end #game-wrapper -->
+
+    <!-- Win Modal -->
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <span class="mascot">🍇💜</span>
+            <h2>Perfecte score!</h2>
+            <p>Speciaal gemaakt voor jou met liefde ❤️</p>
+            <div id="modal-summary" style="margin-top:20px;"></div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameover-overlay">
+        <div class="gameover-content">
+            <span style="font-size:50px;display:block;">😢🍇</span>
+            <h2>Helaas, geen pogingen meer!</h2>
+            <p>Dit waren de antwoorden:</p>
+            <div id="gameover-summary" style="margin-top:16px;"></div>
+            <button class="retry-btn" onclick="location.reload()">🔄 Probeer opnieuw</button>
+        </div>
+    </div>
+
+    <script>
+        // ╔══════════════════════════════════════════════════════════════════╗
+        // ║                                                                ║
+        // ║   🔒  HIER JE WACHTWOORD INSTELLEN! 🔒                       ║
+        // ║                                                                ║
+        // ║   Verander het wachtwoord en de hint hieronder.                ║
+        // ║   Het wachtwoord is NIET hoofdlettergevoelig.                  ║
+        // ║   De hint verschijnt op het wachtwoordscherm.                  ║
+        // ║                                                                ║
+        // ╚══════════════════════════════════════════════════════════════════╝
+
+        const PASSWORD = "druifje";         // ← Verander dit naar jouw wachtwoord
+        const PASSWORD_HINT = "Hint: 🍇💜";  // ← Verander dit naar jouw hint (of laat leeg: "")
+
+        // ╔══════════════════════════════════════════════════════════════════╗
+        // ║   ⬆️  EINDE WACHTWOORD CONFIG ⬆️                              ║
+        // ╚══════════════════════════════════════════════════════════════════╝
+
+        // ============ PASSWORD LOGIC ============
+        function initPasswordScreen() {
+            if (PASSWORD_HINT) {
+                document.getElementById('pw-hint-text').innerText = PASSWORD_HINT;
+            }
+            const input = document.getElementById('pw-input');
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') checkPassword();
+                // Clear error on typing
+                input.classList.remove('pw-error');
+                document.getElementById('pw-error').innerText = '';
+            });
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('pw-input');
+            const value = input.value.trim().toLowerCase();
+
+            if (value === PASSWORD.toLowerCase()) {
+                // Correct! Fade out password screen, show game
+                const screen = document.getElementById('password-screen');
+                screen.style.transition = 'opacity 0.5s ease';
+                screen.style.opacity = '0';
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                    document.getElementById('game-wrapper').classList.add('visible');
+                    initGame();
+                }, 500);
+            } else {
+                // Wrong password
+                input.classList.add('pw-error');
+                document.getElementById('pw-error').innerText = 'Dat is niet het juiste wachtwoord 🍇';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        initPasswordScreen();
+
+        // ╔══════════════════════════════════════════════════════════════════╗
+        // ║                                                                ║
+        // ║   🎮  HIER JE EIGEN WOORDEN INSTELLEN! 🎮                    ║
+        // ║                                                                ║
+        // ║   Pas de onderstaande "gameConfig" aan:                        ║
+        // ║                                                                ║
+        // ║   • group 1 = Geel   (makkelijkste categorie)                 ║
+        // ║   • group 2 = Roze                                             ║
+        // ║   • group 3 = Paars                                            ║
+        // ║   • group 4 = Groen  (moeilijkste categorie)                  ║
+        // ║                                                                ║
+        // ║   Elke categorie heeft:                                        ║
+        // ║     - description: de naam/omschrijving (verschijnt na oplossen)║
+        // ║     - words: precies 4 woorden die bij elkaar horen            ║
+        // ║                                                                ║
+        // ║   ⚠️ Elke categorie moet PRECIES 4 woorden bevatten!          ║
+        // ║   ⚠️ Er moeten PRECIES 4 categorieën zijn!                    ║
+        // ║                                                                ║
+        // ╚══════════════════════════════════════════════════════════════════╝
+
+        const gameConfig = [
+            {
+                group: 1, // 🟡 Geel — makkelijkste
+                description: "DINGEN DIE IK LEUK VIND AAN JOU",
+                words: ["LACH", "HUMOR", "OGEN", "STEM"]
+            },
+            {
+                group: 2, // 🩷 Roze
+                description: "ONZE FAVORIETE ETEN",
+                words: ["SUSHI", "PIZZA", "TACO'S", "PASTA"]
+            },
+            {
+                group: 3, // 💜 Paars
+                description: "STEDEN WAAR WE ZIJN GEWEEST",
+                words: ["PARIJS", "LONDEN", "ROMA", "BERLIJN"]
+            },
+            {
+                group: 4, // 💚 Groen — moeilijkste
+                description: "WOORDEN DIE EINDIGEN OP 'JE'",
+                words: ["KATJE", "HONDJE", "BOOMPJE", "HUISJE"]
+            }
+        ];
+
+        // ╔══════════════════════════════════════════════════════════════════╗
+        // ║   ⬆️  EINDE CONFIGURATIE — Hieronder niks aanpassen! ⬆️       ║
+        // ╚══════════════════════════════════════════════════════════════════╝
+
+
+        // ============ GAME STATE ============
+        let gameInitialized = false;
+        let tiles = [];
+        let selectedTiles = [];
+        let lives = 6; // 6 pogingen!
+        let isProcessing = false;
+        let solvedGroups = [];
+
+        function initGame() {
+            if (gameInitialized) return;
+            gameInitialized = true;
+
+            // Datum weergeven
+            const date = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('date-display').innerText =
+                date.toLocaleDateString('nl-NL', options) + ' · Valentijnsdag Editie';
+
+            // Tiles opbouwen
+            gameConfig.forEach(category => {
+                category.words.forEach(word => {
+                    tiles.push({
+                        word: word,
+                        group: category.group,
+                        description: category.description,
+                        id: Math.random().toString(36).substr(2, 9)
+                    });
+                });
+            });
+
+            shuffleArray(tiles);
+            renderGrid();
+            renderLives();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('tile-grid');
+            grid.innerHTML = '';
+
+            tiles.forEach(tile => {
+                const tileEl = document.createElement('div');
+                tileEl.className = 'tile';
+                if (selectedTiles.includes(tile.id)) tileEl.classList.add('selected');
+                tileEl.innerText = tile.word;
+                tileEl.onclick = () => toggleSelect(tile.id);
+                grid.appendChild(tileEl);
+            });
+            updateSubmitButton();
+        }
+
+        function renderLives() {
+            const container = document.getElementById('lives-display');
+            let html = '<span style="margin-right:4px;">Pogingen resterend:</span>';
+            for (let i = 0; i < 6; i++) {
+                html += `<span class="life-grape ${i >= lives ? 'lost' : ''}">🍇</span>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function toggleSelect(id) {
+            if (isProcessing) return;
+            if (selectedTiles.includes(id)) {
+                selectedTiles = selectedTiles.filter(tId => tId !== id);
+            } else {
+                if (selectedTiles.length < 4) {
+                    selectedTiles.push(id);
+                }
+            }
+            renderGrid();
+        }
+
+        function deselectAll() {
+            selectedTiles = [];
+            renderGrid();
+        }
+
+        function updateSubmitButton() {
+            const btn = document.getElementById('submit-btn');
+            if (selectedTiles.length === 4) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+
+        function shuffleTiles() {
+            if (isProcessing) return;
+            shuffleArray(tiles);
+            renderGrid();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        async function submitGuess() {
+            if (selectedTiles.length !== 4 || isProcessing) return;
+            isProcessing = true;
+
+            const selectedObjects = tiles.filter(t => selectedTiles.includes(t.id));
+            const firstGroup = selectedObjects[0].group;
+            const allMatch = selectedObjects.every(t => t.group === firstGroup);
+
+            if (allMatch) {
+                handleSuccess(firstGroup, selectedObjects);
+            } else {
+                // Check "one away"
+                const counts = {};
+                selectedObjects.forEach(obj => {
+                    counts[obj.group] = (counts[obj.group] || 0) + 1;
+                });
+                if (Object.values(counts).includes(3)) {
+                    showToast("Er klopt er eentje niet... 🍇");
+                }
+                handleFailure();
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function handleSuccess(groupId) {
+            const category = gameConfig.find(g => g.group === groupId);
+            tiles = tiles.filter(t => !selectedTiles.includes(t.id));
+            selectedTiles = [];
+            solvedGroups.push(groupId);
+
+            const solvedContainer = document.getElementById('solved-container');
+            const banner = document.createElement('div');
+            banner.className = 'solved-category';
+            banner.setAttribute('data-group', groupId);
+
+            const title = document.createElement('span');
+            title.className = 'category-title';
+            title.innerText = category.description;
+
+            const words = document.createElement('div');
+            words.className = 'category-words';
+            words.innerText = category.words.join(', ');
+
+            banner.appendChild(title);
+            banner.appendChild(words);
+            solvedContainer.appendChild(banner);
+
+            renderGrid();
+            isProcessing = false;
+
+            if (tiles.length === 0) {
+                setTimeout(showWinModal, 800);
+            }
+        }
+
+        function handleFailure() {
+            const grid = document.getElementById('tile-grid');
+            grid.classList.add('shake');
+
+            lives--;
+            renderLives();
+
+            setTimeout(() => {
+                grid.classList.remove('shake');
+                selectedTiles = [];
+                renderGrid();
+                isProcessing = false;
+
+                if (lives === 0) {
+                    setTimeout(showGameOverModal, 400);
+                }
+            }, 600);
+        }
+
+        // ============ WIN MODAL ============
+        function showWinModal() {
+            const modal = document.getElementById('modal-overlay');
+            const summary = document.getElementById('modal-summary');
+            summary.innerHTML = '';
+
+            gameConfig.forEach(cat => {
+                const div = document.createElement('div');
+                div.className = 'solved-category';
+                div.setAttribute('data-group', cat.group);
+                div.style.marginBottom = '8px';
+                div.style.padding = '10px';
+                div.style.fontSize = '12px';
+                div.innerHTML = `<strong>${cat.description}</strong><br><span style="opacity:0.7">${cat.words.join(', ')}</span>`;
+                summary.appendChild(div);
+            });
+
+            modal.style.display = 'flex';
+            startConfetti();
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+        // ============ GAME OVER MODAL ============
+        function showGameOverModal() {
+            const overlay = document.getElementById('gameover-overlay');
+            const summary = document.getElementById('gameover-summary');
+            summary.innerHTML = '';
+
+            gameConfig.forEach(cat => {
+                const div = document.createElement('div');
+                div.className = 'solved-category';
+                div.setAttribute('data-group', cat.group);
+                div.style.marginBottom = '8px';
+                div.style.padding = '10px';
+                div.style.fontSize = '12px';
+                div.innerHTML = `<strong>${cat.description}</strong><br><span style="opacity:0.7">${cat.words.join(', ')}</span>`;
+                summary.appendChild(div);
+            });
+
+            overlay.style.display = 'flex';
+        }
+
+        // ============ CONFETTI ============
+        function startConfetti() {
+            const colors = ['#fde68a', '#fca5a5', '#c4b5fd', '#86efac', '#f9a8d4', '#7c3aed'];
+            const shapes = ['🍇', '💜', '💕', '✨', '🌿'];
+
+            for (let i = 0; i < 60; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.fontSize = (Math.random() * 16 + 12) + 'px';
+                conf.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
+                conf.style.animationDelay = (Math.random() * 1.5) + 's';
+                conf.innerText = shapes[Math.floor(Math.random() * shapes.length)];
+                document.body.appendChild(conf);
+
+                // Cleanup
+                setTimeout(() => conf.remove(), 6000);
+            }
+        }
+
+        // ============ START ============
+        // Game wordt geïnitialiseerd na het invoeren van het wachtwoord
+        // initGame() wordt aangeroepen vanuit checkPassword()
+    </script>
+</body>
+
+</html>
